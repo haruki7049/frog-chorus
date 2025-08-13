@@ -1,49 +1,17 @@
 const std = @import("std");
 const lightmix = @import("lightmix");
-const Wave = lightmix.Wave;
+const frog_chorus = @import("frog_chorus");
+
 const allocator = std.heap.page_allocator;
+const Wave = lightmix.Wave;
+const Melodies = frog_chorus.Melodies;
 
 pub fn main() !void {
-    const data: [44100]f32 = generate_guitar_note();
-    const guitar: Wave = try Wave.init(data[0..], allocator, .{
-        .sample_rate = 44100,
-        .channels = 1,
-        .bits = 16,
-    });
-    defer guitar.deinit();
+    const melody: Wave = try Melodies.melody(allocator);
+    defer melody.deinit();
 
     var file = try std.fs.cwd().createFile("result.wav", .{});
     defer file.close();
 
-    try guitar.write(file);
-}
-
-fn generate_guitar_note() [44100]f32 {
-    const freq: f32 = 261.626;
-    const sample_rate: f32 = 44100.0;
-    const decay: f32 = 0.996;
-
-    var result: [44100]f32 = undefined;
-
-    const period = @as(usize, @intFromFloat(sample_rate / freq));
-    var buffer: [2000]f32 = undefined;
-    var prng = std.Random.DefaultPrng.init(0);
-    const rand = prng.random();
-
-    for (buffer[0..period]) |*val| {
-        val.* = rand.float(f32) * 2.0 - 1.0;
-    }
-
-    // Karplus–Strong loop
-    var idx: usize = 0;
-    var i: usize = 0;
-    while (i < result.len) : (i += 1) {
-        const next_idx = (idx + 1) % period;
-        const avg = (buffer[idx] + buffer[next_idx]) * 0.5 * decay;
-        buffer[idx] = avg;
-        result[i] = avg;
-        idx = next_idx;
-    }
-
-    return result;
+    try melody.write(file);
 }
