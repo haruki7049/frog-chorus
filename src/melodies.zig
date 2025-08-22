@@ -6,7 +6,7 @@ const Composer = lightmix.Composer;
 
 const settings = @import("./settings.zig");
 const synths = @import("./synths.zig");
-const generate_organ = synths.generate_organ;
+const generate_guitar = synths.generate_guitar;
 const generate_soundless = synths.generate_soundless;
 
 const frequencies = struct {
@@ -59,16 +59,16 @@ fn first_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const c_4: Wave = try generate_organ(frequencies.c_4, allocator);
+    const c_4: Wave = try generate_guitar(frequencies.c_4, allocator);
     defer c_4.deinit();
 
-    const d_4: Wave = try generate_organ(frequencies.d_4, allocator);
+    const d_4: Wave = try generate_guitar(frequencies.d_4, allocator);
     defer d_4.deinit();
 
-    const e_4: Wave = try generate_organ(frequencies.e_4, allocator);
+    const e_4: Wave = try generate_guitar(frequencies.e_4, allocator);
     defer e_4.deinit();
 
-    const f_4: Wave = try generate_organ(frequencies.f_4, allocator);
+    const f_4: Wave = try generate_guitar(frequencies.f_4, allocator);
     defer f_4.deinit();
 
     const soundless: Wave = try generate_soundless(allocator);
@@ -99,16 +99,16 @@ fn second_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const e_4: Wave = try generate_organ(frequencies.e_4, allocator);
+    const e_4: Wave = try generate_guitar(frequencies.e_4, allocator);
     defer e_4.deinit();
 
-    const f_4: Wave = try generate_organ(frequencies.f_4, allocator);
+    const f_4: Wave = try generate_guitar(frequencies.f_4, allocator);
     defer f_4.deinit();
 
-    const g_4: Wave = try generate_organ(frequencies.g_4, allocator);
+    const g_4: Wave = try generate_guitar(frequencies.g_4, allocator);
     defer g_4.deinit();
 
-    const a_4: Wave = try generate_organ(frequencies.a_4, allocator);
+    const a_4: Wave = try generate_guitar(frequencies.a_4, allocator);
     defer a_4.deinit();
 
     const soundless: Wave = try generate_soundless(allocator);
@@ -139,7 +139,7 @@ fn third_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const c_4: Wave = try generate_organ(frequencies.c_4, allocator);
+    const c_4: Wave = try generate_guitar(frequencies.c_4, allocator);
     defer c_4.deinit();
 
     const soundless: Wave = try generate_soundless(allocator);
@@ -170,25 +170,25 @@ fn fourth_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const c_4: Wave = try generate_organ(frequencies.c_4, allocator);
+    const c_4: Wave = try generate_guitar(frequencies.c_4, allocator);
     defer c_4.deinit();
 
     const c_4_half: Wave = c_4.filter(to_half_length);
     defer c_4_half.deinit();
 
-    const d_4: Wave = try generate_organ(frequencies.d_4, allocator);
+    const d_4: Wave = try generate_guitar(frequencies.d_4, allocator);
     defer d_4.deinit();
 
     const d_4_half: Wave = d_4.filter(to_half_length);
     defer d_4_half.deinit();
 
-    const e_4: Wave = try generate_organ(frequencies.e_4, allocator);
+    const e_4: Wave = try generate_guitar(frequencies.e_4, allocator);
     defer e_4.deinit();
 
     const e_4_half: Wave = e_4.filter(to_half_length);
     defer e_4_half.deinit();
 
-    const f_4: Wave = try generate_organ(frequencies.f_4, allocator);
+    const f_4: Wave = try generate_guitar(frequencies.f_4, allocator);
     defer f_4.deinit();
 
     const f_4_half: Wave = f_4.filter(to_half_length);
