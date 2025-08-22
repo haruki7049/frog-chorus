@@ -18,7 +18,11 @@ const frequencies = struct {
     const a_4: f32 = 440.000;
 };
 
-pub fn melody(allocator: std.mem.Allocator) !Wave {
+const Options = struct {
+    amplitude: f32,
+};
+
+pub fn melody(allocator: std.mem.Allocator, options: Options) !Wave {
     const composer = try Composer.init(allocator, .{
         .sample_rate = settings.sample_rate,
         .channels = settings.channels,
@@ -26,16 +30,16 @@ pub fn melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const first_m: Wave = try first_melody(allocator);
+    const first_m: Wave = try first_melody(allocator, options.amplitude);
     defer first_m.deinit();
 
-    const second_m: Wave = try second_melody(allocator);
+    const second_m: Wave = try second_melody(allocator, options.amplitude);
     defer second_m.deinit();
 
-    const third_m: Wave = try third_melody(allocator);
+    const third_m: Wave = try third_melody(allocator, options.amplitude);
     defer third_m.deinit();
 
-    const fourth_m: Wave = try fourth_melody(allocator);
+    const fourth_m: Wave = try fourth_melody(allocator, options.amplitude);
     defer fourth_m.deinit();
 
     const appended_composer = try composer.appendSlice(&[_]Wave{
@@ -51,7 +55,7 @@ pub fn melody(allocator: std.mem.Allocator) !Wave {
     return result;
 }
 
-fn first_melody(allocator: std.mem.Allocator) !Wave {
+fn first_melody(allocator: std.mem.Allocator, amplitude: f32) !Wave {
     const composer = try Composer.init(allocator, .{
         .sample_rate = settings.sample_rate,
         .channels = settings.channels,
@@ -59,16 +63,16 @@ fn first_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const c_4: Wave = try generate_guitar(frequencies.c_4, allocator);
+    const c_4: Wave = try generate_guitar(frequencies.c_4, amplitude, allocator);
     defer c_4.deinit();
 
-    const d_4: Wave = try generate_guitar(frequencies.d_4, allocator);
+    const d_4: Wave = try generate_guitar(frequencies.d_4, amplitude, allocator);
     defer d_4.deinit();
 
-    const e_4: Wave = try generate_guitar(frequencies.e_4, allocator);
+    const e_4: Wave = try generate_guitar(frequencies.e_4, amplitude, allocator);
     defer e_4.deinit();
 
-    const f_4: Wave = try generate_guitar(frequencies.f_4, allocator);
+    const f_4: Wave = try generate_guitar(frequencies.f_4, amplitude, allocator);
     defer f_4.deinit();
 
     const soundless: Wave = try generate_soundless(allocator);
@@ -91,7 +95,7 @@ fn first_melody(allocator: std.mem.Allocator) !Wave {
     return result;
 }
 
-fn second_melody(allocator: std.mem.Allocator) !Wave {
+fn second_melody(allocator: std.mem.Allocator, amplitude: f32) !Wave {
     const composer = try Composer.init(allocator, .{
         .sample_rate = settings.sample_rate,
         .channels = settings.channels,
@@ -99,16 +103,16 @@ fn second_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const e_4: Wave = try generate_guitar(frequencies.e_4, allocator);
+    const e_4: Wave = try generate_guitar(frequencies.e_4, amplitude, allocator);
     defer e_4.deinit();
 
-    const f_4: Wave = try generate_guitar(frequencies.f_4, allocator);
+    const f_4: Wave = try generate_guitar(frequencies.f_4, amplitude, allocator);
     defer f_4.deinit();
 
-    const g_4: Wave = try generate_guitar(frequencies.g_4, allocator);
+    const g_4: Wave = try generate_guitar(frequencies.g_4, amplitude, allocator);
     defer g_4.deinit();
 
-    const a_4: Wave = try generate_guitar(frequencies.a_4, allocator);
+    const a_4: Wave = try generate_guitar(frequencies.a_4, amplitude, allocator);
     defer a_4.deinit();
 
     const soundless: Wave = try generate_soundless(allocator);
@@ -131,7 +135,7 @@ fn second_melody(allocator: std.mem.Allocator) !Wave {
     return result;
 }
 
-fn third_melody(allocator: std.mem.Allocator) !Wave {
+fn third_melody(allocator: std.mem.Allocator, amplitude: f32) !Wave {
     const composer = try Composer.init(allocator, .{
         .sample_rate = settings.sample_rate,
         .channels = settings.channels,
@@ -139,7 +143,7 @@ fn third_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const c_4: Wave = try generate_guitar(frequencies.c_4, allocator);
+    const c_4: Wave = try generate_guitar(frequencies.c_4, amplitude, allocator);
     defer c_4.deinit();
 
     const soundless: Wave = try generate_soundless(allocator);
@@ -162,7 +166,7 @@ fn third_melody(allocator: std.mem.Allocator) !Wave {
     return result;
 }
 
-fn fourth_melody(allocator: std.mem.Allocator) !Wave {
+fn fourth_melody(allocator: std.mem.Allocator, amplitude: f32) !Wave {
     const composer = try Composer.init(allocator, .{
         .sample_rate = settings.sample_rate,
         .channels = settings.channels,
@@ -170,25 +174,25 @@ fn fourth_melody(allocator: std.mem.Allocator) !Wave {
     });
     defer composer.deinit();
 
-    const c_4: Wave = try generate_guitar(frequencies.c_4, allocator);
+    const c_4: Wave = try generate_guitar(frequencies.c_4, amplitude, allocator);
     defer c_4.deinit();
 
     const c_4_half: Wave = c_4.filter(to_half_length);
     defer c_4_half.deinit();
 
-    const d_4: Wave = try generate_guitar(frequencies.d_4, allocator);
+    const d_4: Wave = try generate_guitar(frequencies.d_4, amplitude, allocator);
     defer d_4.deinit();
 
     const d_4_half: Wave = d_4.filter(to_half_length);
     defer d_4_half.deinit();
 
-    const e_4: Wave = try generate_guitar(frequencies.e_4, allocator);
+    const e_4: Wave = try generate_guitar(frequencies.e_4, amplitude, allocator);
     defer e_4.deinit();
 
     const e_4_half: Wave = e_4.filter(to_half_length);
     defer e_4_half.deinit();
 
-    const f_4: Wave = try generate_guitar(frequencies.f_4, allocator);
+    const f_4: Wave = try generate_guitar(frequencies.f_4, amplitude, allocator);
     defer f_4.deinit();
 
     const f_4_half: Wave = f_4.filter(to_half_length);

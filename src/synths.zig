@@ -63,8 +63,8 @@ fn generate_sine_data(frequency: f32, amplitude: f32, length: usize, allocator: 
     return result;
 }
 
-pub fn generate_guitar(frequency: f32, allocator: std.mem.Allocator) !Wave {
-    const data: [settings.samples_per_beat]f32 = generate_guitar_data(frequency);
+pub fn generate_guitar(frequency: f32, amplitude: f32, allocator: std.mem.Allocator) !Wave {
+    const data: [settings.samples_per_beat]f32 = generate_guitar_data(frequency, amplitude);
     const guitar: Wave = try Wave.init(data[0..], allocator, .{
         .sample_rate = settings.sample_rate,
         .channels = settings.channels,
@@ -74,7 +74,7 @@ pub fn generate_guitar(frequency: f32, allocator: std.mem.Allocator) !Wave {
     return guitar;
 }
 
-fn generate_guitar_data(frequency: f32) [settings.samples_per_beat]f32 {
+fn generate_guitar_data(frequency: f32, amplitude: f32) [settings.samples_per_beat]f32 {
     const sample_rate: f32 = @floatFromInt(settings.sample_rate);
     var result: [settings.samples_per_beat]f32 = undefined;
 
@@ -94,7 +94,7 @@ fn generate_guitar_data(frequency: f32) [settings.samples_per_beat]f32 {
         const next_idx = (idx + 1) % period;
         const avg = (buffer[idx] + buffer[next_idx]) * 0.5;
         buffer[idx] = avg;
-        result[i] = avg;
+        result[i] = avg * amplitude;
         idx = next_idx;
     }
 
